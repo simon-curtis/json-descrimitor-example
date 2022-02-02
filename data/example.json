@@ -1,0 +1,43 @@
+{
+    "name": "db-validation-tear-down",
+    "steps": [
+        {
+            "action": "http",
+            "name": "Clear message queue",
+            "inputs": {
+                "uri": "http://localhost:15672/api/queues/%2F/message-store-split",
+                "method": "delete",
+                "expectedresults": [
+                    204,
+                    404
+                ],
+                "auth": {
+                    "type": "basic",
+                    "username": "REDACTED",
+                    "password": "REDACTED"
+                }
+            }
+        },
+        {
+            "action": "sql",
+            "name": "Restore DbValidation database",
+            "inputs": {
+                "server": "localhost\\SQL2019",
+                "auth": {
+                    "type": "password",
+                    "username": "REDACTED",
+                    "password": "REDACTED"
+                },
+                "scripts": [
+                    {
+                        "name": "Drop database",
+                        "type": "file",
+                        "database": "master",
+                        "script": "Drop database.sql",
+                        "can-fail": true
+                    }
+                ]
+            }
+        }
+    ]
+}
